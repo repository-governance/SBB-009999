@@ -1,0 +1,98 @@
+name: Generate SBB thumbnail
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - source/design.archimate
+      - .github/workflows/generate-thumbnail.yml
+
+permissions:
+  contents: read
+
+concurrency:
+  group: sbb-thumbnail-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  generate:
+    if: github.ref == 'refs/heads/master'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    outputs:
+      thumbnail-generated: ${{ steps.generate.outputs.generated }}
+    steps:
+      - name: Checkout SBB repository
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Checkout thumbnail generator
+        uses: actions/checkout@v4
+        with:
+          repository: Continuous-DrivenArchitecture/archimate-thumbnail-generator
+          ref: 06209e094f62a7512c7225d6a1e6d69fd4e4d785
+          path: .thumbnail-generator
+          persist-credentials: false
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install thumbnail generator dependencies
+        run: npm ci --prefix .thumbnail-generator
+
+      - name: Render thumbnails for every view
+        id: generate
+        run: node .github/scripts/generate-thumbnail.js
+
+      - name: Upload generated thumbnails
+        if: steps.generate.outputs.generated == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: sbb-thumbnail-${{ github.run_id }}
+          path: artifacts/
+          if-no-files-found: error
+          retention-days: 1
+
+  publish:
+    needs: generate
+    if: needs.generate.outputs.thumbnail-generated == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      actions: read
+      contents: write
+    steps:
+      - name: Checkout SBB repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Download generated thumbnails
+        uses: actions/download-artifact@v4
+        with:
+          name: sbb-thumbnail-${{ github.run_id }}
+          path: ${{ runner.temp }}/sbb-thumbnails
+
+      - name: Publish thumbnails and update manifest views
+        run: node .github/scripts/generate-thumbnail.js publish "${{ runner.temp }}/sbb-thumbnails"
+
+      - name: Commit thumbnails
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "Thumbnails and manifest views are unchanged."
+            exit 0
+          fi
+          git commit -m "chore: update SBB thumbnails"
+          git push

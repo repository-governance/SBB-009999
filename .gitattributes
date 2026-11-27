@@ -1,0 +1,2 @@
+source/*.archimate -diff -merge
+source/*.xma -diff -merge

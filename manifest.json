@@ -1,0 +1,54 @@
+{
+  "schemaVersion": "2.0",
+  "kind": "SBB",
+  "id": "009999",
+  "title": "Solution Building Block Demo",
+  "repositorySlug": "SBB-009999",
+  "description": "Descripción de la Solution.",
+  "keyFeatures": [],
+  "businessScenarios": [],
+  "serviceDomain": "",
+  "classification": "AM",
+  "solutionArchitectCode": "AS117",
+  "requestedBy": "miguelcespedes",
+  "requestId": "cf18ebec-485c-4ae6-ba81-4d342b9a4c90",
+  "registeredAt": "2026-11-27T04:23:35.347Z",
+  "parentBbg": "BBG-1005",
+  "parentBbb": "BBB-1041",
+  "artifacts": {
+    "design": "source/design.archimate",
+    "exchange": "exchange/exchange.xml",
+    "documentation": "docs/README.md"
+  },
+  "inventory": {
+    "views": 0,
+    "viewDetails": [],
+    "elements": {
+      "ApplicationComponent": 0,
+      "ApplicationFunction": 0,
+      "ApplicationInterface": 0,
+      "ApplicationService": 0,
+      "DataObject": 0,
+      "Location": 0
+    },
+    "totalElements": 0,
+    "relationships": 0
+  },
+  "compliance": {
+    "architecture": "",
+    "security": "",
+    "integration": ""
+  },
+  "dependencies": [],
+  "status": "draft",
+  "releases": [
+    {
+      "version": 1,
+      "planId": "D-12345",
+      "requestedBy": "miguelcespedes",
+      "solutionArchitectCode": "AS117",
+      "requestId": "cf18ebec-485c-4ae6-ba81-4d342b9a4c90",
+      "registeredAt": "2026-11-27T04:23:35.347Z"
+    }
+  ]
+}
