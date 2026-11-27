@@ -22,7 +22,14 @@
   },
   "inventory": {
     "views": 0,
-    "viewDetails": [],
+    "viewDetails": [
+      {
+        "viewpoint": null,
+        "id": "id-2c8b87965d094f2fae338942cc9d7bbe",
+        "name": "DCOM - AM - SBB-009999 - Solution Building Block Demo - TO-BE",
+        "thumbnail": "thumbnails/id-2c8b87965d094f2fae338942cc9d7bbe.png"
+      }
+    ],
     "elements": {
       "ApplicationComponent": 0,
       "ApplicationFunction": 0,
